@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Journey Home Countdown</title>
+    <!-- Favicon - Website Logo -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Radial gradient background for a "sketch of color fading" effect - Lighter Blues */
-            background: radial-gradient(circle at center, #2a4365 0%, #3182ce 50%, #63b3ed 100%);
+            /* Radial gradient background for a "sketch of color fading" effect - NEW Lighter Blues */
+            background: radial-gradient(circle at center, #63b3ed 0%, #3182ce 50%, #2a4365 100%); /* Adjusted for lighter feel */
             display: flex;
             flex-direction: column; /* Changed to column to stack elements */
             justify-content: center;
@@ -52,8 +54,8 @@
             font-size: 2.5rem; /* Larger title */
             font-weight: 700;
             margin-bottom: 2rem; /* More space */
-            color: #63b3ed; /* A nice blue for the title */
-            text-shadow: 0 0 10px rgba(99, 179, 237, 0.7);
+            color: #ffffff; /* Brighter white for the title */
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 25px rgba(99, 179, 237, 0.7); /* Enhanced shadow */
             opacity: 0; /* Hidden initially for staggered fadeIn */
             animation: fadeIn 1s ease-out forwards 0.5s; /* Staggered fadeIn */
         }
@@ -115,16 +117,48 @@
             margin-bottom: 0.75rem;
             color: #e2e8f0;
             position: relative;
-            padding-left: 1.5rem; /* Space for custom checkmark */
+            padding-left: 1.8rem; /* Space for custom checkmark */
+            cursor: pointer; /* Indicate clickable */
+            transition: color 0.3s ease, text-decoration 0.3s ease;
         }
 
+        /* Default icon for list items */
         .baggage-list li::before {
-            content: '✈️'; /* Airplane emoji for bullet point */
+            content: '✨'; /* Generic sparkle emoji for other items */
             position: absolute;
             left: 0;
             color: #a7f3d0; /* Match green from numbers */
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             line-height: 1;
+        }
+
+        /* Specific icons based on data-item attribute */
+        .baggage-list li[data-item="passport"]::before { content: '🛂'; }
+        .baggage-list li[data-item="tickets"]::before { content: '✈️'; }
+        .baggage-list li[data-item="wallet"]::before { content: '💰'; }
+        .baggage-list li[data-item="phone-charger"]::before { content: '📱'; }
+        .baggage-list li[data-item="coffee-beans"]::before { content: '☕'; }
+        .baggage-list li[data-item="bible"]::before { content: '📖'; }
+        .baggage-list li[data-item="clothes"]::before { content: '👕'; }
+        .baggage-list li[data-item="undergarments"]::before { content: '🩲'; } /* Briefs emoji */
+        .baggage-list li[data-item="sleepwear"]::before { content: ' 👕'; } /* Generic for sleepwear */
+        .baggage-list li[data-item="toiletries"]::before { content: '🧴'; } /* Lotion bottle for toiletries */
+        .baggage-list li[data-item="medications"]::before { content: '💊'; }
+        .baggage-list li[data-item="towel"]::before { content: '🧖‍♀️'; } /* Person in steamy room, implies towel */
+        .baggage-list li[data-item="shoes"]::before { content: '👟'; }
+        .baggage-list li[data-item="jacket"]::before { content: '🧥'; }
+        .baggage-list li[data-item="umbrella"]::before { content: '☔'; }
+        .baggage-list li[data-item="adapter"]::before { content: '🔌'; } /* Plug emoji */
+        .baggage-list li[data-item="day-bag"]::before { content: '🎒'; }
+        .baggage-list li[data-item="entertainment"]::before { content: '📚'; }
+        .baggage-list li[data-item="water-bottle"]::before { content: '💧'; }
+
+
+        /* Style for packed items */
+        .baggage-list li.packed {
+            text-decoration: line-through;
+            color: #a0aec0; /* Lighter gray for packed items */
+            opacity: 0.7;
         }
 
         /* Animations */
@@ -133,7 +167,7 @@
             to { text-shadow: 0 0 25px rgba(167, 243, 208, 1); }
         }
 
-        /* Reunion Animation Styles (kept as is) */
+        /* Reunion Animation Styles */
         .reunion-particle {
             position: absolute;
             width: 30px;
@@ -178,6 +212,24 @@
         @keyframes glowPulse {
             0% { transform: scale(1); box-shadow: 0 0 20px #f6ad55; }
             100% { transform: scale(1.2); box-shadow: 0 0 40px #f6ad55, 0 0 60px rgba(246, 173, 85, 0.5); }
+        }
+
+        /* Confetti Styles */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: transparent; /* Color set dynamically */
+            border-radius: 50%;
+            opacity: 0;
+            animation: confetti-fall 3s ease-out forwards;
+            pointer-events: none; /* Allow clicks through confetti */
+            z-index: 9999;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translate(var(--x), var(--y)) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--x-end), var(--y-end)) rotate(720deg); opacity: 0; }
         }
 
         /* Responsive adjustments */
@@ -253,26 +305,26 @@
     <!-- 2-Day, 1-Night Baggage Checklist -->
     <div class="baggage-container">
         <h2 class="baggage-title">2-Day, 1-Night Baggage Checklist</h2>
-        <ul class="baggage-list">
-            <li>Passport / ID / Visa (if needed)</li>
-            <li>Flight Tickets / Boarding Passes</li>
-            <li>Wallet / Local Currency / Credit Cards</li>
-            <li>Phone & Charger / Power Bank</li>
-            <li>**2 Coffee Beans Pack**</li>
-            <li>**Bible**</li>
-            <li>Change of Clothes (2 sets)</li>
-            <li>Undergarments & Socks</li>
-            <li>Sleepwear</li>
-            <li>Basic Toiletries (toothbrush, toothpaste, small shampoo/conditioner)</li>
-            <li>Any necessary Medications</li>
-            <li>Small Towel</li>
-            <li>Comfortable Walking Shoes</li>
-            <li>Light Jacket or Cardigan (for plane/cool evenings)</li>
-            <li>Compact Umbrella (for Malaysia's weather)</li>
-            <li>Adapter (if different plug types)</li>
-            <li>Small Backpack or Day Bag</li>
-            <li>Book or Entertainment for Travel</li>
-            <li>Reusable Water Bottle</li>
+        <ul id="baggageList" class="baggage-list">
+            <li data-item="passport">Passport / ID / Visa (if needed)</li>
+            <li data-item="tickets">Flight Tickets / Boarding Passes</li>
+            <li data-item="wallet">Wallet / Local Currency / Credit Cards</li>
+            <li data-item="phone-charger">Phone & Charger / Power Bank</li>
+            <li data-item="coffee-beans">2 Coffee Beans Pack</li>
+            <li data-item="bible">Bible</li>
+            <li data-item="clothes">Change of Clothes (2 sets)</li>
+            <li data-item="undergarments">Undergarments & Socks</li>
+            <li data-item="sleepwear">Sleepwear</li>
+            <li data-item="toiletries">Basic Toiletries (toothbrush, toothpaste, small shampoo/conditioner)</li>
+            <li data-item="medications">Any necessary Medications</li>
+            <li data-item="towel">Small Towel</li>
+            <li data-item="shoes">Comfortable Walking Shoes</li>
+            <li data-item="jacket">Light Jacket or Cardigan (for plane/cool evenings)</li>
+            <li data-item="umbrella">Compact Umbrella (for Malaysia's weather)</li>
+            <li data-item="adapter">Adapter (if different plug types)</li>
+            <li data-item="day-bag">Small Backpack or Day Bag</li>
+            <li data-item="entertainment">Book or Entertainment for Travel</li>
+            <li data-item="water-bottle">Reusable Water Bottle</li>
         </ul>
     </div>
 
@@ -291,6 +343,86 @@
         const reunionAnimationEl = document.getElementById('reunionAnimation');
         const reunionParticle1 = document.querySelector('.reunion-particle-1');
         const reunionParticle2 = document.querySelector('.reunion-particle-2');
+        const baggageListEl = document.getElementById('baggageList');
+
+        // Audio Context for sound effect
+        let audioContext;
+        let isSoundPlayed = false;
+
+        function playCelebrationSound() {
+            if (isSoundPlayed) return; // Play only once
+            isSoundPlayed = true;
+
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.type = 'sine'; // A clean tone
+                oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4 note
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.5, audioContext.currentTime + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.5);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 1.5);
+            } catch (e) {
+                console.error("Web Audio API not supported or error playing sound:", e);
+            }
+        }
+
+        // Confetti function
+        function createConfetti() {
+            const colors = ['#f6ad55', '#a7f3d0', '#63b3ed', '#ffffff', '#cbd5e0'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.setProperty('--x', `${(Math.random() - 0.5) * 200}px`);
+                confetti.style.setProperty('--y', `${(Math.random() - 0.5) * 200}px`);
+                confetti.style.setProperty('--x-end', `${(Math.random() - 0.5) * 500}px`);
+                confetti.style.setProperty('--y-end', `${window.innerHeight + 100}px`);
+                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                document.body.appendChild(confetti);
+
+                // Remove confetti after animation to clean up DOM
+                confetti.addEventListener('animationend', () => {
+                    confetti.remove();
+                });
+            }
+        }
+
+        // Packing List Logic
+        function loadPackingList() {
+            const packedItems = JSON.parse(localStorage.getItem('packedItems')) || {};
+            baggageListEl.querySelectorAll('li').forEach(item => {
+                const dataItem = item.dataset.item;
+                if (packedItems[dataItem]) {
+                    item.classList.add('packed');
+                }
+            });
+        }
+
+        function savePackingList() {
+            const packedItems = {};
+            baggageListEl.querySelectorAll('li').forEach(item => {
+                const dataItem = item.dataset.item;
+                packedItems[dataItem] = item.classList.contains('packed');
+            });
+            localStorage.setItem('packedItems', JSON.stringify(packedItems));
+        }
+
+        // Event listener for packing list
+        baggageListEl.addEventListener('click', (event) => {
+            if (event.target.tagName === 'LI') {
+                event.target.classList.toggle('packed');
+                savePackingList();
+            }
+        });
 
         // Function to update the countdown
         function updateCountdown() {
@@ -333,6 +465,13 @@
                 if (document.getElementById('countdown')) document.getElementById('countdown').style.display = 'none';
                 if (arrivalMessageEl) arrivalMessageEl.classList.add('show');
 
+                // Trigger celebration effects only once
+                if (!isSoundPlayed) {
+                    playCelebrationSound();
+                    createConfetti();
+                }
+
+
                 // Show and trigger reunion animation
                 if (reunionAnimationEl) {
                     reunionAnimationEl.classList.remove('hidden');
@@ -345,11 +484,12 @@
             }
         }
 
-        // Run updateCountdown immediately to avoid initial delay
-        updateCountdown();
-
-        // Update the countdown every 1 second
-        const countdownInterval = setInterval(updateCountdown, 1000);
+        // Initial setup on load
+        window.onload = function() {
+            updateCountdown();
+            loadPackingList(); // Load saved list state
+            setInterval(updateCountdown, 1000); // Start the countdown
+        }
     </script>
 </body>
 </html>
