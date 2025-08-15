@@ -13,15 +13,18 @@
             /* Radial gradient background for a "sketch of color fading" effect - Lighter Blues */
             background: radial-gradient(circle at center, #2a4365 0%, #3182ce 50%, #63b3ed 100%);
             display: flex;
+            flex-direction: column; /* Changed to column to stack elements */
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden; /* Prevent scrollbars */
+            overflow-y: auto; /* Allow scrolling if content exceeds viewport height */
+            overflow-x: hidden; /* Prevent horizontal scrollbars */
             position: relative; /* Needed for absolute positioning of animation */
+            padding: 2rem 0; /* Add some vertical padding for content */
         }
 
-        .countdown-container {
+        .countdown-container, .baggage-container { /* Applied common styles */
             background-color: rgba(255, 255, 255, 0.05); /* Slightly transparent background */
             border-radius: 20px;
             padding: 2.5rem; /* Increased padding */
@@ -32,6 +35,10 @@
             max-width: 90%; /* Responsive width */
             z-index: 10; /* Ensure container is above background */
             position: relative; /* For z-index to work */
+            margin-bottom: 2rem; /* Space between containers */
+        }
+
+        .countdown-container {
             opacity: 0; /* Hidden initially for main fadeIn */
             animation: fadeIn 1s ease-out forwards; /* Main container fadeIn */
         }
@@ -41,7 +48,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .countdown-title {
+        .countdown-title, .baggage-title {
             font-size: 2.5rem; /* Larger title */
             font-weight: 700;
             margin-bottom: 2rem; /* More space */
@@ -92,6 +99,32 @@
 
         .message.show {
             opacity: 1;
+        }
+
+        /* Baggage List specific styles */
+        .baggage-list {
+            list-style: none; /* Remove default bullet points */
+            padding: 0;
+            text-align: left; /* Align list items to the left */
+            margin: 0 auto; /* Center the list within its container */
+            max-width: 400px; /* Limit list width for better readability */
+        }
+
+        .baggage-list li {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            color: #e2e8f0;
+            position: relative;
+            padding-left: 1.5rem; /* Space for custom checkmark */
+        }
+
+        .baggage-list li::before {
+            content: '✈️'; /* Airplane emoji for bullet point */
+            position: absolute;
+            left: 0;
+            color: #a7f3d0; /* Match green from numbers */
+            font-size: 1.2rem;
+            line-height: 1;
         }
 
         /* Animations */
@@ -149,10 +182,11 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .countdown-container {
+            .countdown-container, .baggage-container {
                 padding: 1.5rem;
+                margin-bottom: 1.5rem;
             }
-            .countdown-title {
+            .countdown-title, .baggage-title {
                 font-size: 1.8rem;
                 margin-bottom: 1.5rem;
             }
@@ -174,6 +208,9 @@
                 width: 20px;
                 height: 20px;
             }
+            .baggage-list li {
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -187,12 +224,15 @@
             .countdown-item div {
                 font-size: 0.8rem;
             }
+            .baggage-list li {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="countdown-container">
-        <h1 class="countdown-title">Journey Malaysia: Arrival Countdown</h1>
+        <h1 class="countdown-title">Journey Home: Arrival Countdown</h1>
         <div id="countdown" class="flex justify-center items-center">
             <div class="countdown-item">
                 <span id="hours">00</span>
@@ -208,6 +248,32 @@
             </div>
         </div>
         <p id="arrivalMessage" class="message">The wait is over! Welcome home, my dearest!</p>
+    </div>
+
+    <!-- 2-Day, 1-Night Baggage Checklist -->
+    <div class="baggage-container">
+        <h2 class="baggage-title">2-Day, 1-Night Baggage Checklist</h2>
+        <ul class="baggage-list">
+            <li>Passport / ID / Visa (if needed)</li>
+            <li>Flight Tickets / Boarding Passes</li>
+            <li>Wallet / Local Currency / Credit Cards</li>
+            <li>Phone & Charger / Power Bank</li>
+            <li>**2 Coffee Beans Pack**</li>
+            <li>**Bible**</li>
+            <li>Change of Clothes (2 sets)</li>
+            <li>Undergarments & Socks</li>
+            <li>Sleepwear</li>
+            <li>Basic Toiletries (toothbrush, toothpaste, small shampoo/conditioner)</li>
+            <li>Any necessary Medications</li>
+            <li>Small Towel</li>
+            <li>Comfortable Walking Shoes</li>
+            <li>Light Jacket or Cardigan (for plane/cool evenings)</li>
+            <li>Compact Umbrella (for Malaysia's weather)</li>
+            <li>Adapter (if different plug types)</li>
+            <li>Small Backpack or Day Bag</li>
+            <li>Book or Entertainment for Travel</li>
+            <li>Reusable Water Bottle</li>
+        </ul>
     </div>
 
     <!-- Reunion Particles (initially hidden, appear on countdown end) -->
